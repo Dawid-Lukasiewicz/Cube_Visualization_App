@@ -111,7 +111,7 @@ static const char *fragmentShaderSourceCore =
     "void main() {\n"
     "   highp vec3 L = normalize(lightPos - vert);\n"
     "   highp float NL = max(dot(normalize(vertNormal), L), 0.0);\n"
-    "   highp vec3 color = vec3(0.39, 1.0, 0.0);\n"
+    "   highp vec3 color = vec3(0.39, 1.0, 0.0);\n"  //COLOR 1
     "   highp vec3 col = clamp(color * 0.2 + color * 0.8 * NL, 0.0, 1.0);\n"
     "   fragColor = vec4(col, 1.0);\n"
     "}\n";
@@ -134,12 +134,16 @@ static const char *fragmentShaderSource =
     "varying highp vec3 vert;\n"
     "varying highp vec3 vertNormal;\n"
     "uniform highp vec3 lightPos;\n"
+    "uniform highp vec3 u_color;\n"
     "void main() {\n"
     "   highp vec3 L = normalize(lightPos - vert);\n"
     "   highp float NL = max(dot(normalize(vertNormal), L), 0.0);\n"
-    "   highp vec3 color = vec3(0.39, 1.0, 0.0);\n"
-    "   highp vec3 col = clamp(color * 0.2 + color * 0.8 * NL, 0.0, 1.0);\n"
-    "   gl_FragColor = vec4(col, 1.0);\n"
+    "   //highp vec3 color = vec3(0.35, 0.9, 1.0);\n" //Lights on
+    "   highp vec3 color = vec3(0.0, 0.0, 1.0);\n" //Lights off
+    /* "   highp vec3 col = clamp(color * 0.2 + color * 0.8 * NL, 0.0, 1.0);\n" */
+    "   highp vec3 col = clamp(color * 0.2 + color * 0.0 * NL, 0.0, 1.0);\n"
+    "   //gl_FragColor = vec4(col, 1.0);\n"
+    "   gl_FragColor = vec4(u_color, 1.0);\n"
     "}\n";
 
 void GLWidget::initializeGL()
@@ -168,6 +172,8 @@ void GLWidget::initializeGL()
     m_mvMatrixLoc = m_program->uniformLocation("mvMatrix");
     m_normalMatrixLoc = m_program->uniformLocation("normalMatrix");
     m_lightPosLoc = m_program->uniformLocation("lightPos");
+    // Custom shader variables:
+    m_colorLoc = m_program->uniformLocation("u_color");
 
     // Create a vertex array object. In OpenGL ES 2.0 and OpenGL 2.x
     // implementations this is optional and support may not be present
@@ -224,6 +230,13 @@ void GLWidget::paintGL()
     m_program->setUniformValue(m_mvMatrixLoc, m_camera * m_world);
     QMatrix3x3 normalMatrix = m_world.normalMatrix();
     m_program->setUniformValue(m_normalMatrixLoc, normalMatrix);
+
+
+//    color = vec3(0.35, 0.9, 1.0); Light on
+//    color = vec3(0.0, 0.0, 1.0); Light off
+//    m_program->setUniformValue(m_colorLoc, QVector3D(0.35, 0.9, 1.0));
+    m_program->setUniformValue(m_colorLoc, QVector3D(0.0, 0.0, 1.0));
+
 
     glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
 
