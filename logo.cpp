@@ -8,51 +8,67 @@ Logo::Logo()
 {
     m_data.resize(2500 * 6);
 
-    const GLfloat x1 = +0.06f;
-    const GLfloat y1 = -0.14f;
+    const GLfloat x1 = +0.14f;
+    const GLfloat y1 = +0.14f;
+
     const GLfloat x2 = +0.14f;
-    const GLfloat y2 = -0.06f;
-    const GLfloat x3 = +0.08f;
-    const GLfloat y3 = +0.00f;
-    const GLfloat x4 = +0.30f;
-    const GLfloat y4 = +0.22f;
+    const GLfloat y2 = -0.14f;
 
-    quad(x1, y1, x2, y2, y2, x2, y1, x1);
-    quad(x3, y3, x4, y4, y4, x4, y3, x3);
+    const GLfloat x3 = -0.14f;
+    const GLfloat y3 = +0.14f;
 
-    extrude(x1, y1, x2, y2);
-    extrude(x2, y2, y2, x2);
-    extrude(y2, x2, y1, x1);
-    extrude(y1, x1, x1, y1);
-    extrude(x3, y3, x4, y4);
-    extrude(x4, y4, y4, x4);
-    extrude(y4, x4, y3, x3);
+    const GLfloat x4 = -0.14f;
+    const GLfloat y4 = -0.14f;
 
-    const int NumSectors = 100;
+//    rectangle(x1, y1, x2, y2, x3, y3, x4, y4, -0.05f);
+    cube(0.0f, 0.0f, 0.00f);
 
-    for (int i = 0; i < NumSectors; ++i) {
-        GLfloat angle = (i * 2 * M_PI) / NumSectors;
-        GLfloat angleSin = qSin(angle);
-        GLfloat angleCos = qCos(angle);
-        const GLfloat x5 = 0.30f * angleSin;
-        const GLfloat y5 = 0.30f * angleCos;
-        const GLfloat x6 = 0.20f * angleSin;
-        const GLfloat y6 = 0.20f * angleCos;
+//    const GLfloat x1 = +0.06f;
+//    const GLfloat y1 = -0.14f;
+//    const GLfloat x2 = +0.14f;
+//    const GLfloat y2 = -0.06f;
+//    const GLfloat x3 = +0.08f;
+//    const GLfloat y3 = +0.00f;
+//    const GLfloat x4 = +0.30f;
+//    const GLfloat y4 = +0.22f;
 
-        angle = ((i + 1) * 2 * M_PI) / NumSectors;
-        angleSin = qSin(angle);
-        angleCos = qCos(angle);
-        const GLfloat x7 = 0.20f * angleSin;
-        const GLfloat y7 = 0.20f * angleCos;
-        const GLfloat x8 = 0.30f * angleSin;
-        const GLfloat y8 = 0.30f * angleCos;
+//    quad(x1, y1, x2, y2, y2, x2, y1, x1);
+//    quad(x3, y3, x4, y4, y4, x4, y3, x3);
 
-        quad(x5, y5, x6, y6, x7, y7, x8, y8);
+//    extrude(x1, y1, x2, y2);
+//    extrude(x2, y2, y2, x2);
+//    extrude(y2, x2, y1, x1);
+//    extrude(y1, x1, x1, y1);
+//    extrude(x3, y3, x4, y4);
+//    extrude(x4, y4, y4, x4);
+//    extrude(y4, x4, y3, x3);
 
-        extrude(x6, y6, x7, y7);
-        extrude(x8, y8, x5, y5);
-    }
+//    const int NumSectors = 100;
+
+//    for (int i = 0; i < NumSectors; ++i) {
+//        GLfloat angle = (i * 2 * M_PI) / NumSectors;
+//        GLfloat angleSin = qSin(angle);
+//        GLfloat angleCos = qCos(angle);
+//        const GLfloat x5 = 0.30f * angleSin;
+//        const GLfloat y5 = 0.30f * angleCos;
+//        const GLfloat x6 = 0.20f * angleSin;
+//        const GLfloat y6 = 0.20f * angleCos;
+
+//        angle = ((i + 1) * 2 * M_PI) / NumSectors;
+//        angleSin = qSin(angle);
+//        angleCos = qCos(angle);
+//        const GLfloat x7 = 0.20f * angleSin;
+//        const GLfloat y7 = 0.20f * angleCos;
+//        const GLfloat x8 = 0.30f * angleSin;
+//        const GLfloat y8 = 0.30f * angleCos;
+
+//        quad(x5, y5, x6, y6, x7, y7, x8, y8);
+
+//        extrude(x6, y6, x7, y7);
+//        extrude(x8, y8, x5, y5);
+//        }
 }
+
 
 void Logo::add(const QVector3D &v, const QVector3D &n)
 {
@@ -64,6 +80,79 @@ void Logo::add(const QVector3D &v, const QVector3D &n)
     *p++ = n.y();
     *p++ = n.z();
     m_count += 6;
+}
+
+void Logo::cube(GLfloat x, GLfloat y, GLfloat z)
+{
+    const GLfloat offset = 0.1f;
+    QVector3D n = QVector3D::normal(
+                QVector3D(x, y, z)
+                ,QVector3D(x+offset, y+offset, z));
+
+    /* First wall */
+//    triangle
+    add(QVector3D(x, y, z), n);
+    add(QVector3D(x+offset, y, z), n);
+    add(QVector3D(x+offset, y+offset, z), n);
+
+//    triangle
+    add(QVector3D(x, y, z), n);
+    add(QVector3D(x+offset, y+offset, z), n);
+    add(QVector3D(x, y+offset, z), n);
+
+    /* Second wall */
+    add(QVector3D(x+offset, y+offset, z), n);
+    add(QVector3D(x+offset, y, z), n);
+    add(QVector3D(x+offset, y+offset, z+offset), n);
+
+    add(QVector3D(x+offset, y+offset, z+offset), n);
+    add(QVector3D(x+offset, y, z), n);
+    add(QVector3D(x+offset, y, z+offset), n);
+
+    /* Third wall */
+    add(QVector3D(x+offset, y+offset, z+offset), n);
+    add(QVector3D(x+offset, y, z+offset), n);
+    add(QVector3D(x, y+offset, z+offset), n);
+
+    add(QVector3D(x, y, z+offset), n);
+    add(QVector3D(x, y+offset, z+offset), n);
+    add(QVector3D(x+offset, y, z+offset), n);
+
+    /* Fourth wall */
+    add(QVector3D(x, y, z), n);
+    add(QVector3D(x+offset, y, z+offset), n);
+    add(QVector3D(x+offset, y, z), n);
+
+    add(QVector3D(x, y, z), n);
+    add(QVector3D(x, y, z+offset), n);
+    add(QVector3D(x+offset, y, z+offset), n);
+
+    /* Fifth wall */
+    add(QVector3D(x, y, z), n);
+    add(QVector3D(x, y+offset, z), n);
+    add(QVector3D(x, y, z+offset), n);
+
+    add(QVector3D(x, y+offset, z), n);
+    add(QVector3D(x, y+offset, z+offset), n);
+    add(QVector3D(x, y, z+offset), n);
+
+    /* Sixth wall */
+    add(QVector3D(x, y+offset, z), n);
+    add(QVector3D(x+offset, y+offset, z), n);
+    add(QVector3D(x+offset, y+offset, z+offset), n);
+
+    add(QVector3D(x, y+offset, z+offset), n);
+    add(QVector3D(x, y+offset, z), n);
+    add(QVector3D(x+offset, y+offset, z+offset), n);
+}
+
+void Logo::rectangle(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3, GLfloat x4, GLfloat y4, GLfloat z)
+{
+    QVector3D n = QVector3D::normal(QVector3D(x4 - x1, y4 - y1, z), QVector3D(x2 - x1, y2 - y1, z));
+    add(QVector3D(x1, y1, z), -n);
+    add(QVector3D(x2, y2, z), -n);
+    add(QVector3D(x3, y3, z), -n);
+    add(QVector3D(x4, y4, z), -n);
 }
 
 void Logo::quad(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3, GLfloat x4, GLfloat y4)
