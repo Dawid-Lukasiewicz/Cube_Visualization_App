@@ -18,6 +18,7 @@ public:
 
 private:
     void add(const QVector3D &v, const QVector3D &n);
+    void led(GLfloat x, GLfloat y, GLfloat z);
     void cube(GLfloat x, GLfloat y, GLfloat z);
     void rectangle(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3, GLfloat x4, GLfloat y4, GLfloat z);
     void quad(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3, GLfloat x4, GLfloat y4);
