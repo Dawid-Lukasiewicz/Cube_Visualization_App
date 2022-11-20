@@ -36,13 +36,14 @@ void Logo::add(const QVector3D &v, const QVector3D &n)
     m_count += 6;
 }
 
-void Logo::led(GLfloat x, GLfloat y, GLfloat z)
+void Logo::create_led(GLfloat x, GLfloat y, GLfloat z, int x_idx, int y_idx, int z_idx)
 {
     const GLfloat offset = 0.03f;
     QVector3D n = QVector3D::normal(
                 QVector3D(x, y, z)
                 ,QVector3D(x+offset, y+offset, z));
 
+    led_data[x_idx][y_idx][z_idx].startingVertex = vertexCount();
     /* First wall */
 //    triangle
     add(QVector3D(x, y, z), n);
@@ -98,18 +99,20 @@ void Logo::led(GLfloat x, GLfloat y, GLfloat z)
     add(QVector3D(x, y+offset, z+offset), n);
     add(QVector3D(x, y+offset, z), n);
     add(QVector3D(x+offset, y+offset, z+offset), n);
+
+    led_data[x_idx][y_idx][z_idx].endingVertex = vertexCount();
 }
 
 void Logo::cube(GLfloat x, GLfloat y, GLfloat z)
 {
     const GLfloat offset = 0.15f;
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < MAX_LEDS_X; ++i)
     {
-        for (int j = 0; j < 5; ++j)
+        for (int j = 0; j < MAX_LEDS_Y; ++j)
         {
-            for (int k = 0; k < 5; ++k)
+            for (int k = 0; k < MAX_LEDS_Z; ++k)
             {
-                led(x+k*offset, y+i*offset, z+j*offset);
+                create_led(x+i*offset, y+j*offset, z+k*offset, i, j, k);
             }
         }
     }

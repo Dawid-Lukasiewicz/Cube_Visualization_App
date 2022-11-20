@@ -232,14 +232,22 @@ void GLWidget::paintGL()
     m_program->setUniformValue(m_normalMatrixLoc, normalMatrix);
 
 
-//    color = vec3(0.35, 0.9, 1.0); Light on
-//    color = vec3(0.0, 0.0, 1.0); Light off
-//    m_program->setUniformValue(m_colorLoc, QVector3D(0.35, 0.9, 1.0));
-    m_program->setUniformValue(m_colorLoc, QVector3D(0.0, 0.0, 1.0));
+    for (int i = 0; i < MAX_LEDS_X; ++i)
+    {
+        for (int j = 0; j < MAX_LEDS_Y; ++j)
+        {
+            for (int k = 0; k < MAX_LEDS_Z; ++k)
+            {
+                if (m_logo.led_data[i][j][k].active)
+                    m_program->setUniformValue(m_colorLoc, QVector3D(0.35, 0.9, 1.0));  //Light on
+                else
+                    m_program->setUniformValue(m_colorLoc, QVector3D(0.0, 0.0, 1.0));   //Light off
 
-
-    glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
-
+                glDrawArrays(GL_TRIANGLES, m_logo.led_data[i][j][k].startingVertex, m_logo.led_data[i][j][k].endingVertex);
+            }
+        }
+    }
+//    glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
     m_program->release();
 }
 
