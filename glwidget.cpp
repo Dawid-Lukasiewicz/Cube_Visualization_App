@@ -20,11 +20,34 @@ GLWidget::GLWidget(QWidget *parent)
         fmt.setAlphaBufferSize(8);
         setFormat(fmt);
     }
+
+
+    socket =  std::make_shared<QTcpSocket>(this);
+
+    //Connect signal to glWidget and to this window
+    connect( socket.get(), SIGNAL(connected()), this, SLOT(connected()) );
+    //Disconnect signal to glWidget and to this window
+    connect( socket.get(), SIGNAL(disconnected()), this, SLOT(disconnected()) );
+    //readRead signal to glWidget
+    connect( socket.get(), SIGNAL(readyRead()), this, SLOT(readyRead()) );
+    //bytesWritten signal to glWidget
+    connect( socket.get(), SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)) );
+
+    /* >>>>>>>>>Initialize socket (move it later to connect button)<<<<<<<<<<< */
+    socket->connectToHost("192.168.100.13", 1234);
+    qDebug() << "Connecting...";
+
+    if (socket->state() != QAbstractSocket::ConnectedState
+            && !socket->waitForConnected(5000))
+    {
+        qDebug() << "Error while connecting: " << socket->error() << "\n";
+    }
+    /* >>>>>>>>>Initialize socket (move it later to connect button)<<<<<<<<<<< */
 }
 
 GLWidget::~GLWidget()
 {
-    cleanup();
+    cleanup();    
 }
 
 QSize GLWidget::minimumSizeHint() const
@@ -85,6 +108,28 @@ void GLWidget::cleanup()
     m_program = nullptr;
     doneCurrent();
     QObject::disconnect(context(), &QOpenGLContext::aboutToBeDestroyed, this, &GLWidget::cleanup);
+}
+
+void GLWidget::connected()
+{
+    qDebug() << "Connected in graphics widget";
+}
+
+void GLWidget::disconnected()
+{
+    qDebug() << "Disconnected in graphics widget";
+}
+
+void GLWidget::readyRead()
+{
+    qDebug() << "Reading: " << socket->bytesAvailable();
+    qDebug() << socket->readAll();
+    socket->write("S\r\n");
+}
+
+void GLWidget::bytesWritten(const qint64 &bytes)
+{
+    qDebug() << "Written " << bytes << " bytes";
 }
 
 static const char *vertexShaderSourceCore =

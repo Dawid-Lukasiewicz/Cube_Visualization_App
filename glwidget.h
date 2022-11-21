@@ -11,6 +11,9 @@
 #include <QMatrix4x4>
 #include "logo.h"
 
+#include <QTcpSocket>
+#include <memory>
+
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
@@ -32,6 +35,12 @@ public slots:
     void setYRotation(int angle);
     void setZRotation(int angle);
     void cleanup();
+
+    //Socket slots
+    void connected();
+    void disconnected();
+    void readyRead();
+    void bytesWritten(const qint64 &bytes);
 
 signals:
     void xRotationChanged(int angle);
@@ -66,6 +75,9 @@ private:
     QMatrix4x4 m_camera;
     QMatrix4x4 m_world;
     static bool m_transparent;
+
+    //Socket ptr
+    std::shared_ptr<QTcpSocket> socket = nullptr;
 };
 
 #endif

@@ -9,7 +9,7 @@ endif()
 
 set(INSTALL_EXAMPLEDIR "${INSTALL_EXAMPLESDIR}/opengl/hellogl2")
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui OpenGL OpenGLWidgets Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui OpenGL OpenGLWidgets Widgets Network)
 
 qt_add_executable(hellogl2
     glwidget.cpp glwidget.h
@@ -30,6 +30,7 @@ target_link_libraries(hellogl2 PUBLIC
     Qt::OpenGL
     Qt::OpenGLWidgets
     Qt::Widgets
+	Qt::Network
 )
 
 install(TARGETS hellogl2
