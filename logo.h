@@ -6,6 +6,7 @@
 
 #include <qopengl.h>
 #include <QList>
+#include <QMap>
 #include <QVector3D>
 
 #define MAX_LEDS_X 5
@@ -31,11 +32,9 @@
 #define Z3 21U
 #define Z4 20U
 
-
-const uint8_t X_table[5] = {X0, X1, X2, X3, X4};
-const uint8_t Y_table[5] = {Y0, Y1, Y2, Y3, Y4};
-const uint8_t Z_table[5] = {Z0, Z1, Z2, Z3, Z4};
-
+const unsigned int X_table[MAX_LEDS_X] = {X0, X1, X2, X3, X4};
+const unsigned int Y_table[MAX_LEDS_Y] = {Y0, Y1, Y2, Y3, Y4};
+const unsigned int Z_table[MAX_LEDS_Z] = {Z0, Z1, Z2, Z3, Z4};
 
 struct Led
 {
@@ -54,8 +53,10 @@ public:
 
     //Variables
     Led led_data[MAX_LEDS_X][MAX_LEDS_Y][MAX_LEDS_Z];
+    QMap<unsigned int, unsigned int> Cube_coords;
 
 private:
+    int activate_led(int X, int Y, int Z);
     void add(const QVector3D &v, const QVector3D &n);
     void create_led(GLfloat x, GLfloat y, GLfloat z, int x_idx, int y_idx, int z_idx);
     void cube(GLfloat x, GLfloat y, GLfloat z);

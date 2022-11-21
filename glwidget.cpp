@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
+#include <QTextStream>
 #include <math.h>
 
 bool GLWidget::m_transparent = false;
@@ -47,6 +48,13 @@ GLWidget::GLWidget(QWidget *parent)
 
 GLWidget::~GLWidget()
 {
+    socket->disconnectFromHost();
+    if (socket->state() != QAbstractSocket::UnconnectedState
+            && !socket->waitForDisconnected())
+    {
+        qDebug() << "Error while disconnecting: " << socket->error() << "\n";
+    }
+    socket->close();
     cleanup();    
 }
 
@@ -122,9 +130,32 @@ void GLWidget::disconnected()
 
 void GLWidget::readyRead()
 {
+//    QTextStream str;
+    int X_idx = -1;
+    int Y_idx= -1;
+    int Z_idx= -1;
     qDebug() << "Reading: " << socket->bytesAvailable();
-    qDebug() << socket->readAll();
     socket->write("S\r\n");
+
+    QString str( socket->readAll());
+    if (str == "----\r\n")
+    {
+//        qDebug() << "led paint";
+        paintGL();
+    }
+    else
+    {
+        X_idx = str.mid(1, 2).toInt();
+        Y_idx = str.mid(4, 2).toInt();
+        Z_idx = str.mid(7, 2).toInt();
+
+        qDebug() << str;
+        int X = m_logo.Cube_coords.take(X_idx);
+        int Y = m_logo.Cube_coords.take(Y_idx);
+        int Z = m_logo.Cube_coords.take(Z_idx);
+        m_logo.led_data[X][Y][Z].active = 1;
+    }
+//    NEED A WAY TO READ UNTIL MEETING -------- message. Then emit signal to paintGL, but do not deactivate leds until next data comes
 }
 
 void GLWidget::bytesWritten(const qint64 &bytes)
@@ -288,6 +319,7 @@ void GLWidget::paintGL()
                     m_program->setUniformValue(m_colorLoc, QVector3D(0.0, 0.0, 1.0));   //Light off
 
                 glDrawArrays(GL_TRIANGLES, m_logo.led_data[i][j][k].startingVertex, m_logo.led_data[i][j][k].endingVertex);
+                m_logo.led_data[i][j][k].active = 0;
             }
         }
     }

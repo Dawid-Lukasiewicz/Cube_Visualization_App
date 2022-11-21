@@ -6,6 +6,25 @@
 
 Logo::Logo()
 {
+
+    Cube_coords[X0] = 0;
+    Cube_coords[X1] = 1;
+    Cube_coords[X2] = 2;
+    Cube_coords[X3] = 3;
+    Cube_coords[X4] = 4;
+
+    Cube_coords[Y0] = 0;
+    Cube_coords[Y1] = 1;
+    Cube_coords[Y2] = 2;
+    Cube_coords[Y3] = 3;
+    Cube_coords[Y4] = 4;
+
+    Cube_coords[Z0] = 0;
+    Cube_coords[Z1] = 1;
+    Cube_coords[Z2] = 2;
+    Cube_coords[Z3] = 3;
+    Cube_coords[Z4] = 4;
+
     m_data.resize(5500 * 6);
 
     const GLfloat x1 = +0.14f;

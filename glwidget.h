@@ -14,6 +14,8 @@
 #include <QTcpSocket>
 #include <memory>
 
+
+
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
 
 class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
