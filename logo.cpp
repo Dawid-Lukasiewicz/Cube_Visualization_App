@@ -3,6 +3,7 @@
 
 #include "logo.h"
 #include <qmath.h>
+#include <QDebug>
 
 #define STR(x)  #x
 
@@ -25,7 +26,9 @@ Logo::Logo()
     Cube_coords["Z21"] = 3;
     Cube_coords["Z20"] = 4;
 
-    m_data.resize(5500 * 6);
+//    m_data.resize(4500 * 6);
+    m_data.resize(125 * 36* 6);
+    qDebug() << m_data.size();
 
     const GLfloat x1 = +0.14f;
     const GLfloat y1 = +0.14f;
@@ -146,6 +149,14 @@ void Logo::cube(GLfloat x, GLfloat y, GLfloat z)
             for (int k = 0; k < MAX_LEDS_Z; ++k)
             {
                 create_led(x+i*offset, y+j*offset, z+k*offset, i, j, k);
+                qDebug()
+                << "X="<< i
+                << "Y="<< j
+                << "Z="<< k
+                << "| "<< led_data[i][j][k].startingVertex
+                << " -> " << led_data[i][j][k].endingVertex << "|"
+                << m_count << "|";
+
             }
         }
     }
