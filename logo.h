@@ -19,13 +19,11 @@
 #define X2 12U
 #define X3 11U
 #define X4 10U
-
 #define Y0 14U
 #define Y1 16U
 #define Y2 17U
 #define Y3 18U
 #define Y4 19U
-
 #define Z0 27U
 #define Z1 26U
 #define Z2 22U
@@ -50,10 +48,11 @@ public:
     const GLfloat *constData() const { return m_data.constData(); }
     int count() const { return m_count; }
     int vertexCount() const { return m_count / 6; }
+    void clear_leds();
 
     //Variables
     Led led_data[MAX_LEDS_X][MAX_LEDS_Y][MAX_LEDS_Z];
-    QMap<unsigned int, unsigned int> Cube_coords;
+    QMap<QString, unsigned int> Cube_coords;
 
 private:
     int activate_led(int X, int Y, int Z);

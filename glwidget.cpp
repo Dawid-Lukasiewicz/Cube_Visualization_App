@@ -130,10 +130,12 @@ void GLWidget::disconnected()
 
 void GLWidget::readyRead()
 {
-//    QTextStream str;
-    int X_idx = -1;
-    int Y_idx= -1;
-    int Z_idx= -1;
+    QString X_idx;
+    QString Y_idx;
+    QString Z_idx;
+    int X, Y, Z;
+    QStringList str_list;
+
     qDebug() << "Reading: " << socket->bytesAvailable();
 
     QString str( socket->readAll());
@@ -141,21 +143,26 @@ void GLWidget::readyRead()
     {
         qDebug() << str;
         socket->write("S\r\n");
-        paintGL();
     }
     else
     {
-        X_idx = str.mid(1, 2).toInt();
-        Y_idx = str.mid(4, 2).toInt();
-        Z_idx = str.mid(7, 2).toInt();
+        m_logo.clear_leds();
+        str_list = str.split(":", Qt::SkipEmptyParts);
+        while (!(str_list.size() < 3) && str_list.first() != "----\r\n")
+        {
+            X_idx = str_list.takeFirst();
+            Y_idx = str_list.takeFirst();
+            Z_idx = str_list.takeFirst();
 
-        qDebug() << str;
-        int X = m_logo.Cube_coords.take(X_idx);
-        int Y = m_logo.Cube_coords.take(Y_idx);
-        int Z = m_logo.Cube_coords.take(Z_idx);
-        m_logo.led_data[X][Y][Z].active = 1;
+//            qDebug() << X_idx<< " " << Y_idx<< " " << Z_idx;
+            X = m_logo.Cube_coords.value(X_idx);
+            Y = m_logo.Cube_coords.value(Y_idx);
+            Z = m_logo.Cube_coords.value(Z_idx);
+            qDebug() << X<< " " << Y<< " " << Z;
+            m_logo.led_data[X][Y][Z].active = 1;
+        }
     }
-//    NEED A WAY TO READ UNTIL MEETING -------- message. Then emit signal to paintGL, but do not deactivate leds until next data comes
+//    paintGL();
 }
 
 void GLWidget::bytesWritten(const qint64 &bytes)
@@ -319,7 +326,6 @@ void GLWidget::paintGL()
                     m_program->setUniformValue(m_colorLoc, QVector3D(0.0, 0.0, 1.0));   //Light off
 
                 glDrawArrays(GL_TRIANGLES, m_logo.led_data[i][j][k].startingVertex, m_logo.led_data[i][j][k].endingVertex);
-                m_logo.led_data[i][j][k].active = 0;
             }
         }
     }
