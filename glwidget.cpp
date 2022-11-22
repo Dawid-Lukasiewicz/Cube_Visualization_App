@@ -135,12 +135,12 @@ void GLWidget::readyRead()
     int Y_idx= -1;
     int Z_idx= -1;
     qDebug() << "Reading: " << socket->bytesAvailable();
-    socket->write("S\r\n");
 
     QString str( socket->readAll());
     if (str == "----\r\n")
     {
-//        qDebug() << "led paint";
+        qDebug() << str;
+        socket->write("S\r\n");
         paintGL();
     }
     else
