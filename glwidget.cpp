@@ -136,7 +136,7 @@ void GLWidget::readyRead()
     int X, Y, Z;
     QStringList str_list;
 
-    qDebug() << "Reading: " << socket->bytesAvailable();
+//    qDebug() << "Reading: " << socket->bytesAvailable();
 
     QString str( socket->readAll());
     if (str == "----\r\n")
@@ -154,7 +154,7 @@ void GLWidget::readyRead()
             Y_idx = str_list.takeFirst();
             Z_idx = str_list.takeFirst();
 
-//            qDebug() << X_idx<< " " << Y_idx<< " " << Z_idx;
+            qDebug() << X_idx<< ":" << Y_idx<< ":" << Z_idx << ":";
             X = m_logo.Cube_coords.value(X_idx);
             Y = m_logo.Cube_coords.value(Y_idx);
             Z = m_logo.Cube_coords.value(Z_idx);
@@ -162,12 +162,12 @@ void GLWidget::readyRead()
             m_logo.led_data[X][Y][Z].active = 1;
         }
     }
-//    paintGL();
+    update();
 }
 
 void GLWidget::bytesWritten(const qint64 &bytes)
 {
-    qDebug() << "Written " << bytes << " bytes";
+//    qDebug() << "Written " << bytes << " bytes";
 }
 
 static const char *vertexShaderSourceCore =
