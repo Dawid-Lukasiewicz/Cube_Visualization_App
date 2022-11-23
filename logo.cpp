@@ -5,8 +5,6 @@
 #include <qmath.h>
 #include <QDebug>
 
-#define STR(x)  #x
-
 Logo::Logo()
 {
 
@@ -16,11 +14,11 @@ Logo::Logo()
     Cube_coords["X11"] = 3;
     Cube_coords["X10"] = 4;
 
-    Cube_coords["Y14"] = 0;
-    Cube_coords["Y16"] = 1;
+    Cube_coords["Y14"] = 4;
+    Cube_coords["Y16"] = 3;
     Cube_coords["Y17"] = 2;
-    Cube_coords["Y18"] = 3;
-    Cube_coords["Y19"] = 4;
+    Cube_coords["Y18"] = 1;
+    Cube_coords["Y19"] = 0;
 
     Cube_coords["Z27"] = 0;
     Cube_coords["Z26"] = 1;
@@ -28,9 +26,7 @@ Logo::Logo()
     Cube_coords["Z21"] = 3;
     Cube_coords["Z20"] = 4;
 
-//    m_data.resize(4500 * 6);
     m_data.resize(MAX_LED_AMOUNT * 36 * 6);
-    qDebug() << m_data.size();
 
     const GLfloat x1 = +0.14f;
     const GLfloat y1 = +0.14f;
@@ -44,7 +40,8 @@ Logo::Logo()
     const GLfloat x4 = -0.14f;
     const GLfloat y4 = -0.14f;
 
-    cube(0.1f, +0.45f, 0.1f);
+//    cube(-0.8f, +0.35f, -0.5f);
+    cube(-0.215f, 0.185f, -0.215f);
 }
 
 void Logo::clear_leds()
@@ -137,13 +134,11 @@ void Logo::create_led(GLfloat x, GLfloat y, GLfloat z, int x_idx, int y_idx, int
     add(QVector3D(x, y+offset, z+offset), n);
     add(QVector3D(x, y+offset, z), n);
     add(QVector3D(x+offset, y+offset, z+offset), n);
-
-    led_data[x_idx][y_idx][z_idx].endingVertex = vertexCount();
 }
 
 void Logo::cube(GLfloat x, GLfloat y, GLfloat z)
 {
-    const GLfloat offset = 0.15f;
+    const GLfloat offset = 0.1f;
     for (int i = 0; i < MAX_LEDS_X; ++i)
     {
         for (int j = 0; j < MAX_LEDS_Y; ++j)
@@ -151,13 +146,13 @@ void Logo::cube(GLfloat x, GLfloat y, GLfloat z)
             for (int k = 0; k < MAX_LEDS_Z; ++k)
             {
                 create_led(x+i*offset, y-j*offset, z+k*offset, i, j, k);
-                qDebug()
-                << "X="<< i
-                << "Y="<< j
-                << "Z="<< k
-                << "| "<< led_data[i][j][k].startingVertex
-                << " -> " << led_data[i][j][k].endingVertex << "|"
-                << m_count << "|";
+//                qDebug()
+//                << "X="<< i
+//                << "Y="<< j
+//                << "Z="<< k
+//                << "| "<< led_data[i][j][k].startingVertex
+//                << " -> " << led_data[i][j][k].endingVertex << "|"
+//                << m_count << "|";
 
             }
         }

@@ -141,7 +141,7 @@ void GLWidget::readyRead()
     QString str( socket->readAll());
     if (str == "----\r\n")
     {
-        qDebug() << str;
+//        qDebug() << str;
         socket->write("S\r\n");
     }
     else
@@ -154,12 +154,12 @@ void GLWidget::readyRead()
             Y_idx = str_list.takeFirst();
             Z_idx = str_list.takeFirst();
 
-            qDebug() << X_idx<< ":" << Y_idx<< ":" << Z_idx << ":";
+//            qDebug() << X_idx<< ":" << Y_idx<< ":" << Z_idx << ":";
             X = m_logo.Cube_coords.value(X_idx);
             Y = m_logo.Cube_coords.value(Y_idx);
             Z = m_logo.Cube_coords.value(Z_idx);
-            qDebug() << X<< " " << Y<< " " << Z;
             m_logo.led_data[X][Y][Z].active = 1;
+//            qDebug() << X<< " " << Y<< " " << Z;
         }
     }
     update();
@@ -246,7 +246,7 @@ void GLWidget::initializeGL()
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, m_core ? vertexShaderSourceCore : vertexShaderSource);
     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, m_core ? fragmentShaderSourceCore : fragmentShaderSource);
     m_program->bindAttributeLocation("vertex", 0);
-//    m_program->bindAttributeLocation("normal", 1);
+    m_program->bindAttributeLocation("normal", 1);
     m_program->link();
 
     m_program->bind();
@@ -289,11 +289,6 @@ void GLWidget::setupVertexAttribs()
     f->glEnableVertexAttribArray(0);
     f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat),
                              nullptr);
-
-//    f->glEnableVertexAttribArray(1);
-//    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),
-//                             reinterpret_cast<void *>(3 * sizeof(GLfloat)));
-
     m_logoVbo.release();
 }
 
@@ -315,8 +310,6 @@ void GLWidget::paintGL()
     QMatrix3x3 normalMatrix = m_world.normalMatrix();
     m_program->setUniformValue(m_normalMatrixLoc, normalMatrix);
 
-/* ORIGINAL */
-    int led_vertex= 0;
     for (int i = 0; i < MAX_LEDS_X; ++i)
     {
         for (int j = 0; j < MAX_LEDS_Y; ++j)
@@ -328,16 +321,13 @@ void GLWidget::paintGL()
                 else
                     m_program->setUniformValue(m_colorLoc, QVector3D(0.0, 0.0, 1.0));   //Light off
 
-                glDrawArrays(GL_TRIANGLES
-                             ,m_logo.led_data[i][j][k].startingVertex
-                             ,m_logo.led_data[i][j][k].endingVertex-(led_vertex*36)
+                glDrawArrays(GL_TRIANGLES                               // Draw mode
+                             ,m_logo.led_data[i][j][k].startingVertex   // Starting index
+                             ,36                                        // Length
                             );
-                ++led_vertex;
             }
         }
     }
-/* ORIGINAL */
-//    glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
 m_program->release();
 }
 
@@ -357,10 +347,10 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     int dx = event->position().toPoint().x() - m_lastPos.x();
     int dy = event->position().toPoint().y() - m_lastPos.y();
 
-    if (event->buttons() & Qt::LeftButton) {
+    if (event->buttons() & Qt::RightButton) {
         setXRotation(m_xRot + 8 * dy);
         setYRotation(m_yRot + 8 * dx);
-    } else if (event->buttons() & Qt::RightButton) {
+    } else if (event->buttons() & Qt::LeftButton) {
         setXRotation(m_xRot + 8 * dy);
         setZRotation(m_zRot + 8 * dx);
     }

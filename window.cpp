@@ -44,9 +44,9 @@ Window::Window(MainWindow *mw)
 
     setLayout(mainLayout);
 
-    xSlider->setValue(15 * 16);
-    ySlider->setValue(345 * 16);
-    zSlider->setValue(0 * 16);
+    xSlider->setValue(270 * 16);
+    ySlider->setValue(0 * 16);
+    zSlider->setValue(270 * 16);
 
     setWindowTitle(tr("Hello GL"));
 }

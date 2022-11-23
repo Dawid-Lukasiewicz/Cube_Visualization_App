@@ -37,7 +37,6 @@ const unsigned int Z_table[MAX_LEDS_Z] = {Z0, Z1, Z2, Z3, Z4};
 struct Led
 {
     int startingVertex;
-    int endingVertex;
     int active = 0;
 };
 
