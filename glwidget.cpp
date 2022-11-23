@@ -39,7 +39,7 @@ GLWidget::GLWidget(QWidget *parent)
     qDebug() << "Connecting...";
 
     if (socket->state() != QAbstractSocket::ConnectedState
-            && !socket->waitForConnected(5000))
+            && !socket->waitForConnected(1000))
     {
         qDebug() << "Error while connecting: " << socket->error() << "\n";
     }
@@ -246,7 +246,7 @@ void GLWidget::initializeGL()
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, m_core ? vertexShaderSourceCore : vertexShaderSource);
     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, m_core ? fragmentShaderSourceCore : fragmentShaderSource);
     m_program->bindAttributeLocation("vertex", 0);
-    m_program->bindAttributeLocation("normal", 1);
+//    m_program->bindAttributeLocation("normal", 1);
     m_program->link();
 
     m_program->bind();
@@ -287,11 +287,13 @@ void GLWidget::setupVertexAttribs()
     m_logoVbo.bind();
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
     f->glEnableVertexAttribArray(0);
-//    f->glEnableVertexAttribArray(1);
     f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat),
                              nullptr);
+
+//    f->glEnableVertexAttribArray(1);
 //    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat),
 //                             reinterpret_cast<void *>(3 * sizeof(GLfloat)));
+
     m_logoVbo.release();
 }
 
@@ -313,52 +315,30 @@ void GLWidget::paintGL()
     QMatrix3x3 normalMatrix = m_world.normalMatrix();
     m_program->setUniformValue(m_normalMatrixLoc, normalMatrix);
 
-    int tmpX=1;
-    int tmpY=0;
-    int tmpZ=0;
-//    m_program->setUniformValue(m_colorLoc, QVector3D(0.35, 0.9, 1.0));  //Light on
-//    glDrawArrays(GL_TRIANGLES, m_logo.led_data[0][0][0].startingVertex, m_logo.led_data[0][0][0].endingVertex);
-
+/* ORIGINAL */
+    int led_vertex= 0;
     for (int i = 0; i < MAX_LEDS_X; ++i)
     {
         for (int j = 0; j < MAX_LEDS_Y; ++j)
         {
             for (int k = 0; k < MAX_LEDS_Z; ++k)
             {
-                if (i == tmpX && j == tmpY && k == tmpZ)
-                {
-                    m_program->setUniformValue(m_colorLoc, QVector3D(0.35, 0.9, 1.0));  //Light on
-                    glDrawArrays(GL_TRIANGLES, m_logo.led_data[i][j][k].startingVertex, m_logo.led_data[i][j][k].endingVertex);
-                    qDebug()
-                    << "| "<< m_logo.led_data[i][j][k].startingVertex
-                    << " -> " << m_logo.led_data[i][j][k].endingVertex << "|";
-                }
+                if (m_logo.led_data[i][j][k].active)
+                    m_program->setUniformValue(m_colorLoc, QVector3D(0.35, 0.9, 1.0));//Light on
                 else
-                {
                     m_program->setUniformValue(m_colorLoc, QVector3D(0.0, 0.0, 1.0));   //Light off
-                    glDrawArrays(GL_TRIANGLES, m_logo.led_data[i][j][k].startingVertex, m_logo.led_data[i][j][k].endingVertex);
-                }
 
+                glDrawArrays(GL_TRIANGLES
+                             ,m_logo.led_data[i][j][k].startingVertex
+                             ,m_logo.led_data[i][j][k].endingVertex-(led_vertex*36)
+                            );
+                ++led_vertex;
             }
         }
     }
-//    for (int i = 0; i < MAX_LEDS_X; ++i)
-//    {
-//        for (int j = 0; j < MAX_LEDS_Y; ++j)
-//        {
-//            for (int k = 0; k < MAX_LEDS_Z; ++k)
-//            {
-//                if (m_logo.led_data[i][j][k].active)
-//                    m_program->setUniformValue(m_colorLoc, QVector3D(0.35, 0.9, 1.0));  //Light on
-//                else
-//                    m_program->setUniformValue(m_colorLoc, QVector3D(0.0, 0.0, 1.0));   //Light off
-
-//                glDrawArrays(GL_TRIANGLES, m_logo.led_data[i][j][k].startingVertex, m_logo.led_data[i][j][k].endingVertex);
-//            }
-//        }
-//    }
+/* ORIGINAL */
 //    glDrawArrays(GL_TRIANGLES, 0, m_logo.vertexCount());
-    m_program->release();
+m_program->release();
 }
 
 void GLWidget::resizeGL(int w, int h)
