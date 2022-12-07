@@ -57,7 +57,7 @@ private:
     int activate_led(int X, int Y, int Z);
     void add(const QVector3D &v, const QVector3D &n);
     void create_led(GLfloat x, GLfloat y, GLfloat z, int x_idx, int y_idx, int z_idx);
-    void cube(GLfloat x, GLfloat y, GLfloat z);
+    void create_cube(GLfloat x, GLfloat y, GLfloat z);
     void rectangle(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3, GLfloat x4, GLfloat y4, GLfloat z);
     void quad(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat x3, GLfloat y3, GLfloat x4, GLfloat y4);
     void extrude(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2);

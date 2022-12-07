@@ -41,7 +41,7 @@ Logo::Logo()
     const GLfloat y4 = -0.14f;
 
 //    cube(-0.8f, +0.35f, -0.5f);
-    cube(-0.215f, -0.185f, -0.215f);
+    create_cube(-0.215f, -0.215f, -0.215f);
 }
 
 void Logo::clear_leds()
@@ -136,7 +136,7 @@ void Logo::create_led(GLfloat x, GLfloat y, GLfloat z, int x_idx, int y_idx, int
     add(QVector3D(x+offset, y+offset, z+offset), n);
 }
 
-void Logo::cube(GLfloat x, GLfloat y, GLfloat z)
+void Logo::create_cube(GLfloat x, GLfloat y, GLfloat z)
 {
     const GLfloat offset = 0.1f;
     for (int i = 0; i < MAX_LEDS_X; ++i)
