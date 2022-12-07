@@ -310,6 +310,9 @@ void GLWidget::paintGL()
     QMatrix3x3 normalMatrix = m_world.normalMatrix();
     m_program->setUniformValue(m_normalMatrixLoc, normalMatrix);
 
+    QVector3D Vec3D_LightOn(0.35, 0.9, 1.0);
+    QVector3D Vec3D_LightOff(0.0, 0.0, 1.0);
+
     for (int i = 0; i < MAX_LEDS_X; ++i)
     {
         for (int j = 0; j < MAX_LEDS_Y; ++j)
@@ -317,9 +320,9 @@ void GLWidget::paintGL()
             for (int k = 0; k < MAX_LEDS_Z; ++k)
             {
                 if (m_logo.led_data[i][j][k].active)
-                    m_program->setUniformValue(m_colorLoc, QVector3D(0.35, 0.9, 1.0));//Light on
+                    m_program->setUniformValue(m_colorLoc, Vec3D_LightOn);
                 else
-                    m_program->setUniformValue(m_colorLoc, QVector3D(0.0, 0.0, 1.0));   //Light off
+                    m_program->setUniformValue(m_colorLoc, Vec3D_LightOff);
 
                 glDrawArrays(GL_TRIANGLES                               // Draw mode
                              ,m_logo.led_data[i][j][k].startingVertex   // Starting index
