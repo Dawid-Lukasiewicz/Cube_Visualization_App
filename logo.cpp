@@ -14,11 +14,11 @@ Logo::Logo()
     Cube_coords["X11"] = 3;
     Cube_coords["X10"] = 4;
 
-    Cube_coords["Y14"] = 4;
-    Cube_coords["Y16"] = 3;
+    Cube_coords["Y14"] = 0;
+    Cube_coords["Y16"] = 1;
     Cube_coords["Y17"] = 2;
-    Cube_coords["Y18"] = 1;
-    Cube_coords["Y19"] = 0;
+    Cube_coords["Y18"] = 3;
+    Cube_coords["Y19"] = 4;
 
     Cube_coords["Z27"] = 0;
     Cube_coords["Z26"] = 1;
@@ -41,7 +41,7 @@ Logo::Logo()
     const GLfloat y4 = -0.14f;
 
 //    cube(-0.8f, +0.35f, -0.5f);
-    cube(-0.215f, 0.185f, -0.215f);
+    cube(-0.215f, -0.185f, -0.215f);
 }
 
 void Logo::clear_leds()
@@ -145,7 +145,7 @@ void Logo::cube(GLfloat x, GLfloat y, GLfloat z)
         {
             for (int k = 0; k < MAX_LEDS_Z; ++k)
             {
-                create_led(x+i*offset, y-j*offset, z+k*offset, i, j, k);
+                create_led(x+i*offset, y+j*offset, z+k*offset, i, j, k);
 //                qDebug()
 //                << "X="<< i
 //                << "Y="<< j
