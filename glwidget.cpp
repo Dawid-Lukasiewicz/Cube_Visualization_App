@@ -35,7 +35,7 @@ GLWidget::GLWidget(QWidget *parent)
     connect( socket.get(), SIGNAL(bytesWritten(qint64)), this, SLOT(bytesWritten(qint64)) );
 
     /* >>>>>>>>>Initialize socket (move it later to connect button)<<<<<<<<<<< */
-    socket->connectToHost("192.168.100.13", 1234);
+    socket->connectToHost("192.168.0.24", 1234);
     qDebug() << "Connecting...";
 
     if (socket->state() != QAbstractSocket::ConnectedState
@@ -55,7 +55,7 @@ GLWidget::~GLWidget()
         qDebug() << "Error while disconnecting: " << socket->error() << "\n";
     }
     socket->close();
-    cleanup();    
+    cleanup();
 }
 
 QSize GLWidget::minimumSizeHint() const
