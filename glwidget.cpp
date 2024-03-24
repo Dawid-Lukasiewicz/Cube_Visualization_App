@@ -134,35 +134,36 @@ void GLWidget::readyRead()
     QString Y_idx;
     QString Z_idx;
     int X, Y, Z;
+    int end_index;
     QStringList str_list;
 
-//    qDebug() << "Reading: " << socket->bytesAvailable();
+    // qDebug() << "Reading: " << socket->bytesAvailable();
 
-    QString str( socket->readAll());
-    if (str == "----\r\n")
-    {
-//        qDebug() << str;
-        socket->write("S\r\n");
-    }
-    else
+    socket_buffer += socket->readAll();
+    // qDebug() << socket_buffer;
+
+    end_index = socket_buffer.indexOf("----\r\n");
+    if(end_index != -1)
     {
         m_logo.clear_leds();
-        str_list = str.split(":", Qt::SkipEmptyParts);
+        str_list = socket_buffer.split(":", Qt::SkipEmptyParts);
         while (!(str_list.size() < 3) && str_list.first() != "----\r\n")
         {
             X_idx = str_list.takeFirst();
             Y_idx = str_list.takeFirst();
             Z_idx = str_list.takeFirst();
 
-//            qDebug() << X_idx<< ":" << Y_idx<< ":" << Z_idx << ":";
+            // qDebug() << X_idx<< ":" << Y_idx<< ":" << Z_idx << ":";
             X = m_logo.Cube_coords.value(X_idx);
             Y = m_logo.Cube_coords.value(Y_idx);
             Z = m_logo.Cube_coords.value(Z_idx);
             m_logo.led_data[X][Y][Z].active = 1;
-//            qDebug() << X<< " " << Y<< " " << Z;
+            // qDebug() << X<< " " << Y<< " " << Z;
         }
+        socket->write("S\r\n");
+        socket_buffer.clear();
+        update();
     }
-    update();
 }
 
 void GLWidget::bytesWritten(const qint64 &bytes)

@@ -59,6 +59,7 @@ protected:
 private:
     void setupVertexAttribs();
 
+    QString socket_buffer;
     bool m_core;
     int m_xRot = 0;
     int m_yRot = 0;
